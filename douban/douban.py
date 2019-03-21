@@ -46,7 +46,7 @@ import urllib.request
 kv=[{'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'},\
 {'User-Agent':'Mozilla/5.0 (Windows NT 6.2) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.12 Safari/535.11'},\
 {'User-Agent': 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)'}]
-cookie ={}
+cookie ={"Cookie":''}
 book_url = 'https://book.douban.com/subject/'
 
 
@@ -54,18 +54,21 @@ def requestWeb(url):
     # s.cookies.clear()
     # requests.utils.dict_from_cookiejar(resp.cookies)
     # resp.cookies.get_dict()
-    time.sleep(1)
+    time.sleep(random.randint(2,5))
     s = requests.session()
-    try:
-        if not cookie["Cookie"]: 
-            resp = s.get(url,verify=False,headers=kv[random.randint(0,2)])
+
+    if not cookie["Cookie"]:
+        resp = s.get(url,verify=False,headers=kv[random.randint(0,2)])
+        if len(resp.cookies.get_dict()) > 0:
             cookie["Cookie"] = 'bid=' + resp.cookies.get_dict()["bid"] +';viewed' + resp.cookies.get_dict()["viewed"] + ';'
-        else:
-            resp = s.get(url,verify=False,headers=kv[random.randint(0,2)],cookies=cookie)
-    except Exception as e:
+    else:
+        resp = s.get(url,verify=False,headers=kv[random.randint(0,2)],cookies=cookie)
+
+    if resp.status_code == 403:
         s.cookies.clear()
         resp = s.get(url,verify=False,headers=kv[random.randint(0,2)])
-        cookie["Cookie"] = 'bid=' + resp.cookies.get_dict()["bid"] +';viewed' + resp.cookies.get_dict()["viewed"] + ';'
+        if len(resp.cookies.get_dict()) > 0:
+            cookie["Cookie"] = 'bid=' + resp.cookies.get_dict()["bid"] +';viewed' + resp.cookies.get_dict()["viewed"] + ';'
 
     return resp
 
@@ -78,9 +81,9 @@ def get_value(items, str, type='text'):
             else:
                 return i.attrib[str]
         except Exception as e:
-            if not os.path.exists('log/' + time.strftime("%Y-%m-%d") + '/'):
-                os.makedirs('log/' + time.strftime("%Y-%m-%d") + '/')
-            with open('log/' + time.strftime("%Y-%m-%d") + '/' + time.strftime("%H") + '.log', 'w', encoding='utf-8') as fs:
+            if not os.path.exists('douban/log/' + time.strftime("%Y-%m-%d") + '/'):
+                os.makedirs('douban/log/' + time.strftime("%Y-%m-%d") + '/')
+            with open('douban/log/' + time.strftime("%Y-%m-%d") + '/' + time.strftime("%H") + '.log', 'w', encoding='utf-8') as fs:
                 fs.write('-------' + time.strftime("%H_%M_%S") + '----' + traceback.format_exc() +
                          '---:  (' + str + ')' + etree.tostring(i, method='html', encoding="utf-8").decode('utf-8'))
     return ''
@@ -322,11 +325,11 @@ def get_book(bid, b_url, dir, start):
 
 if __name__ == "__main__":
     urllib3.disable_warnings()
-    dir = 'file/book/'
+    dir = 'douban/file/book/'
     if not os.path.exists(dir):
         os.makedirs(dir)
-        # 134
-    for i in range(1000126, 30430801):
+        # 1000489
+    for i in range(1000397, 30430801):
         url = book_url + str(i) + '/'
         get_book(i, url, dir, str(i))
         time.sleep(3)
