@@ -1,0 +1,7 @@
+-------13_55_50----Traceback (most recent call last):
+  File "d:\03_PY\douban\douban.py", line 61, in get_value
+    return i.attrib[str]
+  File "src\lxml\etree.pyx", line 2466, in lxml.etree._Attrib.__getitem__
+KeyError: 'class'
+---:  (class)<span>2018-06-16</span>
+                
