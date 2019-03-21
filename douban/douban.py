@@ -10,6 +10,8 @@ import random
 import urllib.request
 
 
+
+
 # //h1/span 标题
 # //img[@rel='v:photo'] 封面
 # //div[@id='info'] 书籍 基本信息
