@@ -270,17 +270,17 @@ def start_server():
     多线程启动服务
     """
 
-    _start_thread(1)
-    # max_process = 1
-    # if ALL_PROCESSES:
-    #     max_process = cpu_count()
+    # _start_thread(1)
+    max_process = 2
+    if ALL_PROCESSES:
+        max_process = cpu_count()
 
-    # processes = []
-    # for i in range(max_process):
-    #     processes.append(Process(target=_start_thread, args=(i,)))
+    processes = []
+    for i in range(max_process):
+        processes.append(Process(target=_start_thread, args=(i,)))
 
-    # for p in processes:
-    #     p.start()
+    for p in processes:
+        p.start()
 
-    # for p in processes:
-    #     p.join()
+    for p in processes:
+        p.join()
