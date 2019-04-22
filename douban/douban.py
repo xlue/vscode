@@ -54,7 +54,7 @@ def requestWeb(url):
     # s.cookies.clear()
     # requests.utils.dict_from_cookiejar(resp.cookies)
     # resp.cookies.get_dict()
-    time.sleep(random.randint(2,5))
+    time.sleep(random.randint(5,10))
     s = requests.session()
 
     if not cookie["Cookie"]:
@@ -81,9 +81,9 @@ def get_value(items, str, type='text'):
             else:
                 return i.attrib[str]
         except Exception as e:
-            if not os.path.exists('douban/log/' + time.strftime("%Y-%m-%d") + '/'):
-                os.makedirs('douban/log/' + time.strftime("%Y-%m-%d") + '/')
-            with open('douban/log/' + time.strftime("%Y-%m-%d") + '/' + time.strftime("%H") + '.log', 'w', encoding='utf-8') as fs:
+            if not os.path.exists('log/' + time.strftime("%Y-%m-%d") + '/'):
+                os.makedirs('log/' + time.strftime("%Y-%m-%d") + '/')
+            with open('log/' + time.strftime("%Y-%m-%d") + '/' + time.strftime("%H") + '.log', 'w', encoding='utf-8') as fs:
                 fs.write('-------' + time.strftime("%H_%M_%S") + '----' + traceback.format_exc() +
                          '---:  (' + str + ')' + etree.tostring(i, method='html', encoding="utf-8").decode('utf-8'))
     return ''
@@ -322,14 +322,14 @@ def get_book(bid, b_url, dir, start):
        fs.write(text)
     print('---------------存入数据:'+str(start) + '------------------------------')
 
-
+# ---------------存入数据:1002594------------------------------
 if __name__ == "__main__":
     urllib3.disable_warnings()
-    dir = 'douban/file/book/'
+    dir = 'file/book/'
     if not os.path.exists(dir):
         os.makedirs(dir)
-        # 1000489
-    for i in range(1000397, 30430801):
+        # 1000446
+    for i in range(1000524, 30430801):
         url = book_url + str(i) + '/'
         get_book(i, url, dir, str(i))
-        time.sleep(3)
+        time.sleep(2)
